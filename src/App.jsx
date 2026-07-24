@@ -31,12 +31,12 @@ function useParticles(ref, accentHex) {
     window.addEventListener('resize', resize)
 
     const pts = Array.from({ length: 65 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 1.2 + 0.3,
-      vx: (Math.random() - 0.5) * 0.22,
-      vy: (Math.random() - 0.5) * 0.22,
-      t:  Math.random() * Math.PI * 2,
+      x:    Math.random() * canvas.width,
+      y:    Math.random() * canvas.height,
+      r:    Math.random() * 1.2 + 0.3,
+      vx:   (Math.random() - 0.5) * 0.22,
+      vy:   (Math.random() - 0.5) * 0.22,
+      t:    Math.random() * Math.PI * 2,
       base: Math.random() * 0.28 + 0.04,
     }))
 
@@ -85,14 +85,12 @@ function useGlassStorm(ref, onComplete, sessionId) {
     const W = () => canvas.width
     const H = () => canvas.height
 
-    // Stars
     const stars = Array.from({ length: 90 }, () => ({
       x: Math.random(), y: Math.random(),
       r: Math.random() * 1.1 + 0.2,
       a: Math.random() * 0.45 + 0.08,
     }))
 
-    // Glass pane factory
     const mkCracks = () => {
       const count = 4 + Math.floor(Math.random() * 4)
       return Array.from({ length: count }, (_, i) => {
@@ -126,7 +124,6 @@ function useGlassStorm(ref, onComplete, sessionId) {
     let swipes = 0, velocities = []
     let raf
 
-    // Shatter a pane
     const shatter = (pane, vx, vy) => {
       pane.shattered = true
       swipes++
@@ -155,7 +152,6 @@ function useGlassStorm(ref, onComplete, sessionId) {
       }
     }
 
-    // Draw calls
     const drawBg = (rev) => {
       ctx.fillStyle = '#060d18'
       ctx.fillRect(0, 0, W(), H())
@@ -223,12 +219,12 @@ function useGlassStorm(ref, onComplete, sessionId) {
       ctx.restore()
     }
 
-    // Input
     const xy = (e) => {
       const rect = canvas.getBoundingClientRect()
       const src = e.touches ? e.touches[0] : e
       return { x: src.clientX - rect.left, y: src.clientY - rect.top }
     }
+
     const onDown = (e) => {
       e.preventDefault()
       const { x, y } = xy(e)
@@ -266,7 +262,6 @@ function useGlassStorm(ref, onComplete, sessionId) {
     canvas.addEventListener('touchmove', onMove, { passive: false })
     canvas.addEventListener('touchend', onUp)
 
-    // Game loop
     const tick = () => {
       if (done) return
       drawBg(reveal)
@@ -281,7 +276,6 @@ function useGlassStorm(ref, onComplete, sessionId) {
         drawParticle(p)
       })
 
-      // Swipe trail
       if (trail.length > 1) {
         for (let i = 1; i < trail.length; i++) {
           ctx.beginPath()
@@ -292,7 +286,6 @@ function useGlassStorm(ref, onComplete, sessionId) {
         }
       }
 
-      // Progress dots
       const total = panes.length
       const shattered = panes.filter(p => p.shattered).length
       const dotStart = (W() - total * 14) / 2
@@ -303,7 +296,6 @@ function useGlassStorm(ref, onComplete, sessionId) {
         ctx.fill()
       })
 
-      // Hint
       if (shattered === 0) {
         ctx.fillStyle = 'rgba(255,255,255,0.28)'
         ctx.font = '13px system-ui'
@@ -358,7 +350,7 @@ function useGlassStorm(ref, onComplete, sessionId) {
   }, [])
 }
 
-// ─── Component: CrisisFooter ──────────────────────────────────
+// ─── CrisisFooter ─────────────────────────────────────────────
 function CrisisFooter({ alwaysOpen = false }) {
   const [open, setOpen] = useState(alwaysOpen)
   return (
@@ -368,13 +360,13 @@ function CrisisFooter({ alwaysOpen = false }) {
         style={{ display: 'block', width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: '7px 0' }}
       >
         <span style={{ fontSize: 11, color: T.dim }}>
-          💙 Need support? You're not alone {open ? '▲' : '▼'}
+          {open ? 'Hide support resources ▲' : '💙 Need support? You are not alone ▼'}
         </span>
       </button>
       {open && (
         <div style={{ borderRadius: 10, border: `1px solid ${T.border}`, background: T.surface, padding: '12px 14px', marginTop: 4 }}>
           <p style={{ margin: '0 0 8px', fontSize: 11, color: T.muted, textAlign: 'center' }}>
-            Free helplines — India — available 24 / 7
+            Free helplines — India — available 24/7
           </p>
           {CRISIS.map((c, i) => (
             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: i < CRISIS.length - 1 ? `1px solid ${T.border}` : 'none' }}>
@@ -388,7 +380,7 @@ function CrisisFooter({ alwaysOpen = false }) {
   )
 }
 
-// ─── Screen: Disclaimer ───────────────────────────────────────
+// ─── DisclaimerScreen ─────────────────────────────────────────
 function DisclaimerScreen({ onAccept }) {
   return (
     <div style={{ minHeight: '100vh', background: T.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 20px' }}>
@@ -400,17 +392,15 @@ function DisclaimerScreen({ onAccept }) {
             This is a wellness companion, not a medical tool. It does not replace professional mental health support, therapy, or emergency care.
           </p>
         </div>
-
         <div style={{ borderRadius: 10, background: 'rgba(74,158,222,0.08)', border: '1px solid rgba(74,158,222,0.25)', padding: '12px 14px', marginBottom: 14 }}>
           <p style={{ margin: '0 0 5px', fontSize: 11, fontWeight: 700, color: '#4A9EDE', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            📊 Development notice
+            Development notice
           </p>
           <p style={{ margin: 0, fontSize: 12, color: T.muted, lineHeight: 1.6 }}>
-            To improve this app, we anonymously collect how you interact with games, completion rates, and before / after feeling scores.{' '}
+            To improve this app we anonymously collect how you interact with games, completion rates, and before/after feeling scores.{' '}
             <strong style={{ color: T.text }}>No personal information is ever collected.</strong>
           </p>
         </div>
-
         <div style={{ borderRadius: 10, border: `1px solid ${T.border}`, background: T.surface, padding: '12px 14px', marginBottom: 20 }}>
           <p style={{ margin: '0 0 8px', fontSize: 11, color: T.muted }}>Free helplines if you need support right now</p>
           {CRISIS.map((c, i) => (
@@ -420,7 +410,6 @@ function DisclaimerScreen({ onAccept }) {
             </div>
           ))}
         </div>
-
         <button
           onClick={onAccept}
           style={{ width: '100%', padding: 14, borderRadius: 12, background: '#4A9EDE', border: 'none', color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
@@ -432,7 +421,7 @@ function DisclaimerScreen({ onAccept }) {
   )
 }
 
-// ─── Screen: Landing ──────────────────────────────────────────
+// ─── LandingScreen ────────────────────────────────────────────
 function LandingScreen({ onSelect, onUnknown }) {
   const [hov, setHov] = useState(null)
   const bgRef = useRef(null)
@@ -451,7 +440,6 @@ function LandingScreen({ onSelect, onUnknown }) {
           </h1>
           <p style={{ margin: 0, fontSize: 13, color: T.muted }}>Pick the one that feels closest. No wrong answers.</p>
         </div>
-
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, flex: 1 }}>
           {CONDITIONS.map((c, i) => (
             <button
@@ -477,7 +465,7 @@ function LandingScreen({ onSelect, onUnknown }) {
             >
               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: hov === i ? c.color : 'transparent', transition: 'background 0.22s', borderRadius: '14px 14px 0 0' }} />
               {c.built && (
-                <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 9, color: c.color, background: `${c.color}18`, padding: '1px 7px', borderRadius: 20, fontWeight: 700, letterSpacing: '0.04em' }}>
+                <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 9, color: c.color, background: `${c.color}18`, padding: '1px 7px', borderRadius: 20, fontWeight: 700 }}>
                   LIVE
                 </span>
               )}
@@ -494,10 +482,10 @@ function LandingScreen({ onSelect, onUnknown }) {
   )
 }
 
-// ─── Screen: Signal (I Don't Know) ───────────────────────────
+// ─── SignalScreen ─────────────────────────────────────────────
 function SignalScreen({ onRoute, onBack }) {
-  const [picked, setPicked]   = useState(null)
-  const [stage, setStage]     = useState(0)
+  const [picked, setPicked] = useState(null)
+  const [stage, setStage]   = useState(0)
   const bgRef = useRef(null)
   useParticles(bgRef, picked !== null ? SIGNAL_SCENES[picked].color : '#A89E8A')
 
@@ -511,9 +499,8 @@ function SignalScreen({ onRoute, onBack }) {
       <canvas ref={bgRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }} />
       <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', padding: '36px 20px 20px', maxWidth: 500, margin: '0 auto', width: '100%' }}>
         <button onClick={onBack} style={{ alignSelf: 'flex-start', background: 'none', border: 'none', color: T.muted, fontSize: 13, cursor: 'pointer', marginBottom: 28, padding: 0 }}>
-          ← Back
+          Back
         </button>
-
         {stage === 0 ? (
           <>
             <div style={{ textAlign: 'center', marginBottom: 28 }}>
@@ -541,7 +528,7 @@ function SignalScreen({ onRoute, onBack }) {
           <>
             <div style={{ textAlign: 'center', marginBottom: 28 }}>
               <p style={{ margin: '0 0 6px', fontSize: 11, color: SIGNAL_SCENES[picked].color, textTransform: 'uppercase', letterSpacing: '0.12em' }}>One more</p>
-              <h2 style={{ margin: '0 0 6px', fontSize: 20, fontWeight: 600, color: T.text, lineHeight: 1.4 }}>Which is closer to what you're feeling?</h2>
+              <h2 style={{ margin: '0 0 6px', fontSize: 20, fontWeight: 600, color: T.text, lineHeight: 1.4 }}>Which is closer to what you are feeling?</h2>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {SIGNAL_SCENES[picked].followup.map((f, i) => {
@@ -549,15 +536,12 @@ function SignalScreen({ onRoute, onBack }) {
                 return (
                   <button
                     key={i}
-                    onClick={() => {
-                      DB.recordSignalRoute('pending', SIGNAL_SCENES[picked].label, f.answer, cond.id)
-                      onRoute(cond)
-                    }}
+                    onClick={() => { DB.recordSignalRoute('pending', SIGNAL_SCENES[picked].label, f.answer, cond.id); onRoute(cond) }}
                     style={{ borderRadius: 14, border: `1px solid ${T.border}`, background: T.card, padding: '16px 20px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', transition: 'all 0.2s' }}
                   >
                     <div>
                       <p style={{ margin: '0 0 2px', fontSize: 14, fontWeight: 500, color: T.text }}>{f.answer}</p>
-                      <p style={{ margin: 0, fontSize: 11, color: cond.color }}>→ {cond.game}</p>
+                      <p style={{ margin: 0, fontSize: 11, color: cond.color }}>{cond.game}</p>
                     </div>
                     <span style={{ fontSize: 20 }}>{cond.icon}</span>
                   </button>
@@ -572,7 +556,7 @@ function SignalScreen({ onRoute, onBack }) {
   )
 }
 
-// ─── Game: Glass Storm ────────────────────────────────────────
+// ─── GlassStormGame ───────────────────────────────────────────
 function GlassStormGame({ sessionId, onDone }) {
   const ref = useRef(null)
   useGlassStorm(ref, onDone, sessionId)
@@ -590,7 +574,7 @@ function GlassStormGame({ sessionId, onDone }) {
   )
 }
 
-// ─── Game: Placeholder (for unbuilt games) ────────────────────
+// ─── GamePlaceholder ──────────────────────────────────────────
 function GamePlaceholder({ condition, sessionId, onDone }) {
   const bgRef = useRef(null)
   useParticles(bgRef, condition.color)
@@ -609,22 +593,23 @@ function GamePlaceholder({ condition, sessionId, onDone }) {
         <h2 style={{ margin: '0 0 10px', fontSize: 24, fontWeight: 600, color: T.text }}>{condition.game}</h2>
         <p style={{ margin: '0 0 22px', fontSize: 13, color: T.muted, lineHeight: 1.7 }}>{condition.desc}</p>
         <div style={{ borderRadius: 10, border: `1px dashed ${condition.color}44`, padding: '10px 16px', marginBottom: 22, background: `${condition.color}08` }}>
-          <p style={{ margin: 0, fontSize: 12, color: condition.color }}>🚧 This game is being built in the next phase</p>
+          <p style={{ margin: 0, fontSize: 12, color: condition.color }}>This game is being built in the next phase</p>
         </div>
         <button onClick={handleContinue} style={{ padding: '12px 28px', borderRadius: 12, background: condition.color, border: 'none', color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-          Continue →
+          Continue
         </button>
       </div>
     </div>
   )
 }
 
-// ─── Screen: Check-in ─────────────────────────────────────────
+// ─── CheckinScreen ────────────────────────────────────────────
 function CheckinScreen({ condition, sessionId, onDone }) {
   const [val, setVal] = useState(50)
   const barRef = useRef(null)
 
   const updateVal = (e) => {
+    if (!barRef.current) return
     const rect = barRef.current.getBoundingClientRect()
     const clientX = e.touches ? e.touches[0].clientX : e.clientX
     const pct = Math.max(0, Math.min(100, Math.round(((clientX - rect.left) / rect.width) * 100)))
@@ -636,7 +621,11 @@ function CheckinScreen({ condition, sessionId, onDone }) {
     onDone(val)
   }
 
-  const msg = val < 30 ? "You're still carrying it — and that's okay." : val < 60 ? 'A little lighter than before.' : 'You found some relief in there.'
+  const msg = val < 30
+    ? "Still carrying it — and that is okay."
+    : val < 60
+    ? "A little lighter than before."
+    : "You found some relief in there."
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 28 }}>
@@ -665,22 +654,26 @@ function CheckinScreen({ condition, sessionId, onDone }) {
   )
 }
 
-// ─── Screen: Session Close ────────────────────────────────────
+// ─── SessionClose ─────────────────────────────────────────────
 function SessionClose({ condition, sessionId, feeling, onHome }) {
   const [showData, setShowData] = useState(false)
   const stats = DB.getStats()
+
+  // FIX: all strings here use double quotes to allow apostrophes safely
+  const heading = feeling > 55
+    ? "You did something kind for yourself today"
+    : "You showed up. That's enough."
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '28px 20px' }}>
       <div style={{ maxWidth: 380, width: '100%', textAlign: 'center' }}>
         <div style={{ fontSize: 42, marginBottom: 18 }}>{feeling > 55 ? '🌿' : '💙'}</div>
         <h2 style={{ margin: '0 0 10px', fontSize: 21, fontWeight: 600, color: T.text }}>
-          {feeling > 55 ? 'You did something kind for yourself today' : 'You showed up. That's enough.'}
+          {heading}
         </h2>
         <p style={{ margin: '0 0 28px', fontSize: 14, color: T.muted, lineHeight: 1.8, fontStyle: 'italic' }}>
-          "{AFFIRMATIONS[condition.id]}"
+          {AFFIRMATIONS[condition.id]}
         </p>
-
         <div style={{ borderRadius: 12, border: `1px solid ${condition.color}33`, background: `${condition.color}0a`, padding: '14px 16px', marginBottom: 16, textAlign: 'left' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
             <p style={{ margin: 0, fontSize: 11, color: condition.color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Your Mindscape</p>
@@ -700,10 +693,10 @@ function SessionClose({ condition, sessionId, feeling, onHome }) {
           ) : (
             <div>
               {[
-                ['Sessions total', stats.sessions.length],
-                ['Completed sessions', stats.sessions.filter(s => s.completed).length],
-                ['Telemetry records', stats.telemetry.length],
-                ['Feeling check-ins', stats.checkins.length],
+                ['Sessions total',      stats.sessions.length],
+                ['Completed sessions',  stats.sessions.filter(s => s.completed).length],
+                ['Telemetry records',   stats.telemetry.length],
+                ['Feeling check-ins',   stats.checkins.length],
               ].map(([label, val], i) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', borderBottom: i < 3 ? `1px solid ${T.border}` : 'none' }}>
                   <span style={{ fontSize: 12, color: T.muted }}>{label}</span>
@@ -716,7 +709,6 @@ function SessionClose({ condition, sessionId, feeling, onHome }) {
             </div>
           )}
         </div>
-
         <button onClick={onHome} style={{ width: '100%', padding: 13, borderRadius: 12, background: condition.color, border: 'none', color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', marginBottom: 12 }}>
           Return home
         </button>
@@ -726,9 +718,9 @@ function SessionClose({ condition, sessionId, feeling, onHome }) {
   )
 }
 
-// ─── Screen: Game Router (orchestrates flow) ──────────────────
+// ─── GameRouter ───────────────────────────────────────────────
 function GameRouter({ condition, sessionId, onBack }) {
-  const [phase, setPhase] = useState('game')
+  const [phase, setPhase]   = useState('game')
   const [feeling, setFeeling] = useState(50)
   const bgRef = useRef(null)
   useParticles(bgRef, condition.color)
@@ -749,17 +741,15 @@ function GameRouter({ condition, sessionId, onBack }) {
       <canvas ref={bgRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }} />
       <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', maxWidth: 680, margin: '0 auto', width: '100%' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px 0' }}>
-          <button onClick={onBack} style={{ background: 'none', border: 'none', color: T.muted, fontSize: 13, cursor: 'pointer', padding: 0 }}>← Back</button>
+          <button onClick={onBack} style={{ background: 'none', border: 'none', color: T.muted, fontSize: 13, cursor: 'pointer', padding: 0 }}>Back</button>
           <span style={{ fontSize: 11, color: T.dim }}>{phase === 'game' ? 'Play' : 'Check-in'}</span>
-          <span style={{ width: 50 }} />
+          <span style={{ width: 40 }} />
         </div>
-
         {phase === 'game' && (
           condition.built && condition.id === 'stress'
             ? <GlassStormGame sessionId={sessionId} onDone={() => setPhase('checkin')} />
             : <GamePlaceholder condition={condition} sessionId={sessionId} onDone={() => setPhase('checkin')} />
         )}
-
         {phase === 'checkin' && (
           <CheckinScreen
             condition={condition}
@@ -767,7 +757,6 @@ function GameRouter({ condition, sessionId, onBack }) {
             onDone={score => { setFeeling(score); setPhase('close') }}
           />
         )}
-
         <div style={{ padding: '0 20px 16px' }}>
           <CrisisFooter />
         </div>
@@ -776,7 +765,7 @@ function GameRouter({ condition, sessionId, onBack }) {
   )
 }
 
-// ─── Root App ─────────────────────────────────────────────────
+// ─── Root ─────────────────────────────────────────────────────
 export default function App() {
   const [screen, setScreen]       = useState(() => localStorage.getItem('pm_seen') ? 'landing' : 'disclaimer')
   const [condition, setCondition] = useState(null)
@@ -789,17 +778,9 @@ export default function App() {
     setScreen('game')
   }
 
-  if (screen === 'disclaimer') {
-    return <DisclaimerScreen onAccept={() => { localStorage.setItem('pm_seen', '1'); setScreen('landing') }} />
-  }
-  if (screen === 'landing') {
-    return <LandingScreen onSelect={startSession} onUnknown={() => setScreen('signal')} />
-  }
-  if (screen === 'signal') {
-    return <SignalScreen onRoute={startSession} onBack={() => setScreen('landing')} />
-  }
-  if (screen === 'game') {
-    return <GameRouter condition={condition} sessionId={sessionId} onBack={() => setScreen('landing')} />
-  }
+  if (screen === 'disclaimer') return <DisclaimerScreen onAccept={() => { localStorage.setItem('pm_seen', '1'); setScreen('landing') }} />
+  if (screen === 'landing')    return <LandingScreen onSelect={startSession} onUnknown={() => setScreen('signal')} />
+  if (screen === 'signal')     return <SignalScreen onRoute={startSession} onBack={() => setScreen('landing')} />
+  if (screen === 'game')       return <GameRouter condition={condition} sessionId={sessionId} onBack={() => setScreen('landing')} />
   return null
 }
